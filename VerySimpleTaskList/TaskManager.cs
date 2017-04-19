@@ -35,6 +35,10 @@ namespace VerySimpleTaskList
                 }
                 else if (choice == 4)
                 {
+                    DoRemoveTask();
+                }
+                else if (choice == 5)
+                {
                     DoListAllTasks();
                 }
             }
@@ -60,7 +64,8 @@ namespace VerySimpleTaskList
             Console.WriteLine("-------------------------");
             Console.Write("What task do you want to change? ");
 
-            int index = GetNumberFromUser();
+            
+            int index = GetValidIndexFromUser();
 
             Console.Write("What is the new task's priority? ");
 
@@ -80,6 +85,37 @@ namespace VerySimpleTaskList
 
             int index = GetNumberFromUser();
             _tasks[index].MarkCompleted();
+        }
+
+        private void DoRemoveTask()
+        {
+            string validity = "invalid";
+
+
+            while (validity != "valid")
+            {
+                Console.Clear();
+                Console.WriteLine("REMOVE A TASK");
+                Console.WriteLine("--------------");
+                PrintNumberedTaskList();
+                Console.WriteLine("-------------------------");
+                Console.Write("What task do you want to remove? ");
+
+                int index = GetNumberFromUser();
+
+                if (index >= 0 && index <= _tasks.Count)
+                {
+                    validity = "valid";
+                    _tasks.RemoveAt(index);
+                }
+                else
+                {
+
+                    Console.WriteLine($"{index} is not a valid choice.  Try again.  ");
+                    Console.WriteLine("Hit enter to continue");
+                    Console.ReadLine();
+                }
+            }
         }
 
         private void PrintNumberedTaskList()
@@ -114,15 +150,46 @@ namespace VerySimpleTaskList
             return int.Parse(input);
         }
 
+        private int GetValidIndexFromUser()
+        {
+            //Get a number
+            //Check the number
+            //If it is bad, ask for it again
+            //Return a good number
+            string validity = "invalid";
+
+            int index = GetNumberFromUser();
+
+            while (validity != "valid")
+            {
+                index = GetNumberFromUser();
+                if (index >= 0 && index <= _tasks.Count)
+                {
+                    validity = "valid";
+                    //break;
+                }
+                else
+                {
+                    Console.WriteLine($"{index} is not a valid choice.  Try again.  ");
+                    Console.WriteLine("Hit enter to continue");
+                    Console.ReadLine();
+
+                }
+            }
+            return index;
+        }
+
         private void ShowMenu()
         {
             Console.Clear();
             Console.WriteLine("TASK MANAGEMENT!");
+            Console.WriteLine($"You have {_tasks.Count} task(s).");
             Console.WriteLine("-------------------------");
             Console.WriteLine("1. Add a task");
             Console.WriteLine("2. Mark a task complete");
             Console.WriteLine("3. Set a task's priority");
-            Console.WriteLine("4. List the tasks");
+            Console.WriteLine("4. Remove a task");
+            Console.WriteLine("5. List the tasks");
             Console.WriteLine();
             Console.WriteLine("0. Exit");
             Console.WriteLine("-------------------------");
@@ -132,3 +199,4 @@ namespace VerySimpleTaskList
         private List<Task> _tasks;
     }
 }
+
